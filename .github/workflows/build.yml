@@ -1,34 +1,34 @@
-name: Build Windows x64 Executable
+name: Build Python Executable for Windows
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-latest  # 使用 Windows 环境
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up MSVC
-      uses: ilammy/msvc-dev-cmd@v1
+    - name: Set up Python
+      uses: actions/setup-python@v4
       with:
-        toolchain: latest
+        python-version: "3.10"  # 指定你的 Python 版本
 
-    - name: Build (Release x64)
+    - name: Install dependencies
       run: |
-        mkdir build
-        cd build
-        cmake .. -A x64 -DCMAKE_BUILD_TYPE=Release
-        cmake --build . --config Release
+        python -m pip install --upgrade pip
+        pip install pyinstaller  # 打包工具（可选）
+        pip install -r requirements.txt  # 安装项目依赖
+
+    - name: Build Executable (可选)
+      run: |
+        pyinstaller --onefile --name myapp main.py  # 打包成单文件 EXE
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
-
       with:
-        name: Windows-Executable
-        path: build/Release/*.exe
+        name: Python-Windows-Executable
+        path: dist/*.exe  # PyInstaller 生成的 EXE 文件
