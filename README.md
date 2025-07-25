@@ -1,2 +1,3 @@
-# SM2-Test
-# SM2-Test
+# CCE_Tools
+
+A tool for sm2 & rsa sign/verity test.
