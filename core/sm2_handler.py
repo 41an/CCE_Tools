@@ -1,8 +1,10 @@
 import re
+import secrets
 
 from asn1crypto.algos import DSASignature
-from gmssl import func, sm3
+from gmssl import sm2, func, sm3
 from gmssl.sm2 import default_ecc_table
+from secrets import token_hex
 
 # SM2椭圆曲线参数 (素数域256位) - GB/T 32918.5-2017
 P = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF
@@ -303,6 +305,7 @@ def extract_rs_from_asn1(signature_hex: str) -> tuple[str, str]:
     返回:
         (R, S): 十六进制字符串形式的 R 和 S（去除前导 0）
     """
+    import binascii
 
     data = bytearray.fromhex(signature_hex)
 
@@ -343,7 +346,7 @@ def generate_sm2_keypair():
 
     # print("SM2 Private Key (hex):", private_key)
     # print("SM2 Public Key (hex, uncompressed):", "04" + public_key)
-    return private_key,public_key
+    return private_key,'04'+public_key
 
 # 计算e值
 def calc_sm2_digest_e(id_hex: str, msg: bytes, pub_key_hex: str) -> str:
@@ -388,6 +391,8 @@ def calc_sm2_digest_e(id_hex: str, msg: bytes, pub_key_hex: str) -> str:
     return e
 
 
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 
 
@@ -433,3 +438,48 @@ def generate_sm2_key_pair():
 
     return private_pem.decode('utf-8'), public_pem.decode('utf-8')
 
+
+# def is_valid_signature(signature: str) -> bool:
+#     """
+#     验证签名是否合法（是否为有效的十六进制字符串）
+#
+#     参数:
+#         signature: 待验证的签名字符串
+#
+#     返回:
+#         bool: True 表示合法，False 表示不合法
+#     """
+#     # 1. 基本检查：非空
+#     if not signature:
+#         return False
+#
+#     # 2. 检查是否只包含十六进制字符（0-9, a-f, A-F）
+#     hex_chars = set("0123456789abcdefABCDEF")
+#     if not all(char in hex_chars for char in signature):
+#         return False
+#
+#     # 3. 检查长度是否合理（SM2签名通常是128-144个字符）
+#     length = len(signature)
+#     if length < 128 or length > 144:  # 64-72字节的十六进制表示
+#         return False
+#
+#     return True
+
+
+
+
+
+# 示例用法
+if __name__ == "__main__":
+    private_pem, public_pem = generate_sm2_key_pair()
+    print("私钥 (PEM):")
+    print(private_pem)
+    print("\n公钥 (PEM):")
+    print(public_pem)
+
+    pri,pub=generate_sm2_keypair()
+    print(pri)
+    print(pub)
+    print("########")
+
+    print(sm2_hex_priv_to_pem("27490a8370df503e965dcfba7f26d708fb4062a8519a611d40055fbc59518d21"))
