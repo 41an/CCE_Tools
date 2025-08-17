@@ -1,4 +1,4 @@
-from gmssl import sm2, func
+from gmssl import sm2
 
 from utils.gen_key import generate_sm2_keypair
 

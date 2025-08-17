@@ -1,5 +1,7 @@
-from gmssl import sm2
 import os
+
+from gmssl import sm2
+
 
 def generate_sm2_keypair():
     """

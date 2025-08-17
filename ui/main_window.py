@@ -1,8 +1,8 @@
 import gmalg
 from PyQt5.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout,
+    QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QPushButton, QLineEdit, QTextEdit, QRadioButton,
-    QGroupBox, QButtonGroup, QTabWidget, QStackedLayout, QSizePolicy, QSpacerItem
+    QGroupBox, QButtonGroup, QTabWidget, QSizePolicy, QSpacerItem
 )
 
 from func.sm2_tools import calc_sm2_digest_e, encode_rs_to_asn1, extract_rs_from_asn1, \
